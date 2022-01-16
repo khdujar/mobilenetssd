@@ -146,11 +146,30 @@ def event_handle(event):
         replyObj = StickerSendMessage(package_id=str(1),sticker_id=str(sk_id))
         line_bot_api.reply_message(rtoken, replyObj)
         return ''
-
+    
     if msgType == "text":
         msg = str(event["message"]["text"])
-        replyObj = TextSendMessage(text=msg)
-        line_bot_api.reply_message(rtoken, replyObj)
+        if msg == "สวัสดี":
+            replyObj = TextSendMessage(text="ดีด้วย")
+            line_bot_api.reply_message(rtoken,replyObj)
+        elif msg == "กินข้าวไหม":
+            replyObj = TextSendMessage(text="ไม่ล่ะ กินแล้ว")
+            line_bot_api.reply_message(rtoken,replyObj)
+        elif msg == "ไปเที่ยวกันไหม":
+            replyObj = TextSendMessage(text="ไปดิ")
+            line_bot_api.reply_message(rtoken,replyObj)
+        elif msg == "covid" :
+            url = "https://covid19.ddc.moph.go.th/api/Cases/today-cases-all"
+            response = requests.get(url)
+            response = response.json()
+            replyObj = TextSendMessage(text=str(response))
+            line_bot_api.reply_message(rtoken, replyObj)
+        else :
+            headers = request.headers
+            json_headers = ({k:v for k, v in headers.items()})
+            json_headers.update({'Host':'bots.dialogflow.com'})
+            url = ""
+            requests.post(url,data=json_line, headers=json_headers) 
     elif msgType == "image":
         try:
             message_content = line_bot_api.get_message_content(event['message']['id'])
